@@ -71,7 +71,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '') or "s
 # CrimeData2018 = Base.classes.crimedata2018
 db = SQLAlchemy(app)
 
-from .models import CrimeData2018
+from models import CrimeData2018
 
 #################################################
 # Database Setup
