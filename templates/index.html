@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Crime in the City by the Bay</title>
+  <script src="https://unpkg.com/simple-statistics@5.0.0/dist/simple-statistics.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link rel="shortcut icon" type="../static/extra/" href="if_Police_2667287.png"/>
+  <link rel="shortcut icon" type="image/png" href="http://example.com/favicon.png"/>  
+
+  <!--Home Page CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+    
+  <!-- Leaflet JS & CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+
+  <!-- d3 JavaScript -->
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+
+  <!-- Marker Cluster JS & CSS -->
+  <script type="text/javascript" src="https://unpkg.com/leaflet.markercluster@1.0.3/dist/leaflet.markercluster.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.0.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.0.3/dist/MarkerCluster.Default.css">
+</head>
+
+<body>
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+          <font face="courier" color="red">
+          <center><h3 class="panel-title">Where does crime happen in SF?</h3></center>
+          </font>
+        </div>
+    </div>
+
+    <div id="map"></div>
+    <!-- <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-8">
+                  <div id="map"></div>
+              </div>
+            </div>
+      </div> -->
+
+      
+  
+  <!-- <div class="container">
+    <div class="jumbotron">
+      <h2 align="center">
+        <font face="courier" color="red">
+        What Drives Crime in the City by the Bay?
+        </font>
+      </h2>
+      <p></p>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-primary">
+          <div class="panel-body">
+            <font face="courier" color="red">
+                Questions to Ponder?
+            </font>
+          </div>
+        </div>
+        <div class="description">
+            <font face="courier" color="red">
+             Narrative. 
+            </font>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-primary">
+          <div id="map"> </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+      
+      <script>
+    
+        var mapbox_url = "/api/mapbox/dark"
+        // Add base layer
+        var base = L.tileLayer("https://api.mapbox.com/styles/v1/dtang29/cjj4nypu128ag2slgg99psk1p/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZHRhbmcyOSIsImEiOiJjaml4d3VjdDAwNGc1M3ZwY2c5N2l6NzNxIn0.bmCkx-wQYo-__4VKq3P5qA");
+    
+        // "https://api.mapbox.com/styles/v1/mapbox/outdoors-v10/tiles/256/{z}/{x}/{y}?" +
+        //         "access_token=pk.eyJ1IjoiZHRhbmcyOSIsImEiOiJjaml4d3VjdDAwNGc1M3ZwY2c5N2l6NzNxIn0." +
+        //         "bmCkx-wQYo-__4VKq3P5qA"            
+    
+        // Set variables for our endpoints to grab the data
+        var url = "/api/crimedata/sfgrid";
+        var assault_url = "/api/crimedata/2018/assault";
+        var vandalism_url = "/api/crimedata/2018/vandalism";
+        var theft_url = "/api/crimedata/2018/theft";
+    
+       
+    ////////////////////////////////////
+    //Create Marker Clusters for Assault
+    ////////////////////////////////////
+    var assaultMarkers = [];
+    d3.json(assault_url, function(response) {
+    
+        // Creating a new marker cluster group
+        var markers = L.markerClusterGroup();
+    
+        // Loop through our data...
+        for (var i = 0; i < response.length; i++) {
+        // set the data location property to a variable
+    
+        // Add a new marker to the cluster group and bind a pop-up
+            // markers.addLayer(L.marker([response[i].Y, response[i].X])
+            // .bindPopup(response[i].Descript));
+            assaultMarkers.push(
+                markers.addLayer(L.marker([response[i].Y, response[i].X]).bindPopup( '<b>' + response[i].Descript + '</b>' + '<br>' + response[i].Date +
+                '<br>' + response[i].Address + '<br>' + 'Action taken by SFPD: ' + response[i].Resolution))
+            );
+    
+        }
+    
+    
+        ////////////////////////////////////
+        //Create Marker Clusters for Vandalism
+        ////////////////////////////////////
+        var vandalismMarkers = [];
+        d3.json(vandalism_url, function(response) {
+    
+            // Creating a new marker cluster group
+            var vmarkers = L.markerClusterGroup();
+            // Loop through our data...
+            for (var i = 0; i < response.length; i++) {
+            // set the data location property to a variable
+    
+            // Add a new marker to the cluster group and bind a pop-up
+                // markers.addLayer(L.marker([response[i].Y, response[i].X])
+                // .bindPopup(response[i].Descript));
+                vandalismMarkers.push(
+                    vmarkers.addLayer(L.marker([response[i].Y, response[i].X]).bindPopup( '<b>' + response[i].Descript + '</b>' + '<br>' + response[i].Date +
+                   '<br>' + response[i].Address + '<br>' + 'Action taken by SFPD: ' + response[i].Resolution))
+                );
+            }
+    
+    
+            ///////////////////////////////////
+            //Create Marker Clusters for Theft/Larceny
+            ////////////////////////////////////
+            var theftMarkers = [];
+            d3.json(theft_url, function(response) {
+    
+                // Creating a new marker cluster group
+                var markers = L.markerClusterGroup();
+    
+                // Loop through our data...
+                for (var i = 0; i < response.length; i++) {
+                // set the data location property to a variable
+    
+                // Add a new marker to the cluster group and bind a pop-up
+                    // markers.addLayer(L.marker([response[i].Y, response[i].X])
+                    // .bindPopup(response[i].Descript));
+                    theftMarkers.push(
+                        markers.addLayer(L.marker([response[i].Y, response[i].X]).bindPopup( '<b>' + response[i].Descript + '</b>' + '<br>' + response[i].Date +
+                   '<br>' + response[i].Address + '<br>' + 'Action taken by SFPD: ' + response[i].Resolution))
+                    );
+    
+                }
+    
+                // console.log(theftMarkers);
+                var assaultLayer = L.layerGroup(assaultMarkers);
+                var vandalismLayer = L.layerGroup(vandalismMarkers);
+                var theftLayer = L.layerGroup(theftMarkers);
+                
+                //Create the layers 
+                var baseMaps = {
+                    "San Francisco": base
+                };
+                
+                var overlayMaps = {
+                    //"SF Neighborhoods": sflayer,
+                    Assault: assaultLayer,
+                    Vandalism: vandalismLayer,
+                    Theft:theftLayer
+    
+                };
+                
+                //Create the map
+                var map = L.map("map", {
+                center: [37.77397, -122.43129],
+                zoom: 11,
+                layers: [base, assaultLayer, vandalismLayer,theftLayer]
+                });
+                
+                ///////////////////////
+                //Create SF Grid
+                ///////////////////////
+                d3.json(url, function(assault_data) {
+                    L.geoJson(assault_data, {
+                        // Style each feature (in this case a neighborhood)
+                        style: function(feature) {
+                            return {
+                                color: "#0079FF",
+                                // Call the chooseColor function to decide which color to color our neighborhood (color based on borough)
+                                // fillColor: chooseColor(feature.properties.borough),
+                                fillOpacity: 0.5,
+                                weight: 1.5
+                            };
+                        },
+                            // Called on each feature
+                        onEachFeature: function(feature, layer) {
+                        // Set mouse events to change map styling
+                            layer.on({
+                                // When a user's mouse touches a map feature, the mouseover event calls this function, that feature's opacity changes to 90% so that it stands out
+                                mouseover: function(event) {
+                                layer = event.target;
+                                console.log(layer);
+                                layer.setStyle({
+                                    fillOpacity: 0.9
+                                });
+                                },
+                                // When the cursor no longer hovers over a map feature - when the mouseout event occurs - the feature's opacity reverts back to 50%
+                                mouseout: function(event) {
+                                layer = event.target;
+                                console.log(layer);
+                                layer.setStyle({
+                                    fillOpacity: 0.5
+                                });
+                                },
+                                // When a feature (neighborhood) is clicked, it is enlarged to fit the screen
+                                click: function(event) {
+                                console.log(event.target);
+                                map.fitBounds(event.target.getBounds());
+                                }
+                            });
+                            // Giving each feature a pop-up with information pertinent to it
+                            layer.bindPopup("<h1>" + feature.properties.name + "</h1>");
+                        }
+                    }).addTo(map);
+    
+    
+                    //Add the layers to the map
+                    L.control.layers(baseMaps, overlayMaps).addTo(map);
+                });
+            });
+        });
+    });
+        </script>
+        <!-- <iframe width="100%" height="520" frameborder="0" src="https://c42know.carto.com/builder/bdc6c9b1-1c69-463a-a829-58dd67382465/embed" allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe> -->
+
+    <!-- <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-primary">
+            <div class="panel-body">
+              <font face="courier" color="red">
+                  Number of Crimes per Day over the Past Year and a Half
+              </font>
+            </div>
+          </div>
+          <div class="description">
+              <font face="courier" color="red">
+               Narrative. 
+              </font>
+          </div>
+        </div>
+    </div> -->
+        <!-- <script>
+          var margin = {top: 40, right: 40, bottom: 40, left: 40},
+          width = 960 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
+
+          var parse = d3.time.format("%b %Y").parse;
+
+          var x = d3.time.scale()
+              .range([0, width]);
+
+          var y = d3.scale.linear()
+              .range([height, 0]);
+
+          var xAxis = d3.svg.axis()
+              .scale(x)
+              .tickSize(-height);
+
+          var yAxis = d3.svg.axis()
+              .scale(y)
+              .ticks(4)
+              .orient("right");
+
+          var area = d3.svg.area()
+              .interpolate("monotone")
+              .x(function(d) { return x(d.date); })
+              .y0(height)
+              .y1(function(d) { return y(d.
+              \); });
+
+          var line = d3.svg.line()
+              .interpolate("monotone")
+              .x(function(d) { return x(d.date); })
+              .y(function(d) { return y(d.price); });
+
+          var svg = d3.select("body").append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+          svg.append("clipPath")
+              .attr("id", "clip")
+            .append("rect")
+              .attr("width", width)
+              .attr("height", height);
+          
+          var url = "/api/crimedata";
+          // Grabbing our GeoJSON data.
+          d3.json(url, function(data) {
+            if (error) throw error;
+
+            // Compute the minimum and maximum date, and the maximum price.
+            x.domain([data[0].date, data[data.length - 1].date]);
+            y.domain([0, d3.max(data, function(d) { return d.price; })]).nice();
+
+            svg
+                .datum(data)
+                .on("click", click);
+
+            svg.append("path")
+                .attr("class", "area")
+                .attr("clip-path", "url(#clip)")
+                .attr("d", area);
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(" + width + ",0)")
+                .call(yAxis);
+
+            svg.append("path")
+                .attr("class", "line")
+                .attr("clip-path", "url(#clip)")
+                .attr("d", line);
+
+            svg.append("text")
+                .attr("x", width - 6)
+                .attr("y", height - 6)
+                .style("text-anchor", "end")
+                .text(data[0].symbol);
+
+            // On click, update the x-axis.
+            function click() {
+              var n = data.length - 1,
+                  i = Math.floor(Math.random() * n / 2),
+                  j = i + Math.floor(Math.random() * n / 2) + 1;
+              x.domain([data[i].date, data[j].date]);
+              var t = svg.transition().duration(750);
+              t.select(".x.axis").call(xAxis);
+              t.select(".area").attr("d", area);
+              t.select(".line").attr("d", line);
+            }
+          });
+
+          // Parse dates and numbers. We assume values are sorted by date.
+          // Also filter to one symbol; the S&P 500.
+          function type(d) {
+            d.date = parse(d.date);
+            d.price = +d.price;
+            if (d.symbol === "S&P 500") return d;
+          }
+
+        </script> -->
+
+
+</body>
+
+</html> 

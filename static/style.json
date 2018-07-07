@@ -1,0 +1,1022 @@
+{
+    "version": 8,
+    "name": "Terminal",
+    "metadata": {
+        "mapbox:autocomposite": true,
+        "mapbox:type": "template",
+        "mapbox:groups": {
+            "a66d0d214dba1f06b06746ee06f339eb": {
+                "name": "Landuse",
+                "collapsed": false
+            },
+            "291cf04c4d42c8fbe82804c4e260b481": {
+                "name": "Buildings",
+                "collapsed": true
+            },
+            "0f0c5671b00a0cb79d64b8a147b54bf8": {
+                "name": "Roads and other lines",
+                "collapsed": false
+            },
+            "7585fc5330da0ebd023654f80536026a": {
+                "name": "Labels",
+                "collapsed": false
+            }
+        },
+        "mapbox:trackposition": true,
+        "mapbox:sdk-support": {
+            "js": "0.45.0",
+            "android": "6.0.0",
+            "ios": "4.0.0"
+        }
+    },
+    "center": [
+        -118.26334645482484,
+        33.94199655739615
+    ],
+    "zoom": 10,
+    "bearing": 0,
+    "pitch": 0,
+    "light": {
+        "intensity": 0,
+        "anchor": "map"
+    },
+    "sources": {
+        "composite": {
+            "url": "mapbox://mapbox.mapbox-streets-v7,mapbox.mapbox-terrain-v2",
+            "type": "vector"
+        }
+    },
+    "sprite": "mapbox://sprites/dtang29/cjj4nypu128ag2slgg99psk1p",
+    "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+    "layers": [
+        {
+            "id": "background",
+            "type": "background",
+            "paint": {
+                "background-color": "hsl(0, 0%, 16%)"
+            },
+            "interactive": true
+        },
+        {
+            "id": "water",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "a66d0d214dba1f06b06746ee06f339eb"
+            },
+            "source": "composite",
+            "source-layer": "water",
+            "layout": {},
+            "paint": {
+                "line-color": "hsl(213, 100%, 50%)",
+                "line-width": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            10,
+                            0.5
+                        ],
+                        [
+                            16,
+                            2
+                        ]
+                    ]
+                }
+            },
+            "interactive": true
+        },
+        {
+            "id": "parks",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "a66d0d214dba1f06b06746ee06f339eb"
+            },
+            "source": "composite",
+            "source-layer": "landuse",
+            "filter": [
+                "in",
+                "class",
+                "cemetery",
+                "park"
+            ],
+            "layout": {},
+            "paint": {
+                "line-color": "hsl(102, 100%, 50%)"
+            },
+            "interactive": true
+        },
+        {
+            "id": "vegatation",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "a66d0d214dba1f06b06746ee06f339eb"
+            },
+            "source": "composite",
+            "source-layer": "landuse",
+            "filter": [
+                "in",
+                "class",
+                "cemetery",
+                "grass",
+                "scrub",
+                "wood"
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "hsl(0, 0%, 12%)",
+                "line-opacity": 1
+            },
+            "interactive": true
+        },
+        {
+            "id": "other landuse",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "a66d0d214dba1f06b06746ee06f339eb"
+            },
+            "source": "composite",
+            "source-layer": "landuse",
+            "filter": [
+                "in",
+                "class",
+                "hospital",
+                "industrial",
+                "school"
+            ],
+            "layout": {},
+            "paint": {
+                "line-color": "hsl(312, 100%, 63%)"
+            },
+            "interactive": true
+        },
+        {
+            "id": "contour",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "0f0c5671b00a0cb79d64b8a147b54bf8"
+            },
+            "source": "composite",
+            "source-layer": "contour",
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-dasharray": [
+                    2,
+                    2
+                ],
+                "line-color": "hsl(0, 0%, 26%)"
+            },
+            "interactive": true
+        },
+        {
+            "id": "contour label",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "0f0c5671b00a0cb79d64b8a147b54bf8"
+            },
+            "source": "composite",
+            "source-layer": "contour",
+            "filter": [
+                "in",
+                "$type",
+                "LineString",
+                "Point",
+                "Polygon"
+            ],
+            "layout": {
+                "text-field": "{ele}",
+                "symbol-placement": "line",
+                "text-rotation-alignment": "map",
+                "text-size": 10,
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ]
+            },
+            "paint": {
+                "text-halo-width": 2,
+                "text-halo-color": "#2b2b2b",
+                "text-color": "hsl(0, 0%, 34%)"
+            },
+            "interactive": true
+        },
+        {
+            "id": "rail",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "0f0c5671b00a0cb79d64b8a147b54bf8"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "filter": [
+                "all",
+                [
+                    "in",
+                    "$type",
+                    "LineString",
+                    "Point"
+                ],
+                [
+                    "in",
+                    "class",
+                    "major_rail",
+                    "minor_rail"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "black",
+                "line-width": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            10,
+                            0.5
+                        ],
+                        [
+                            16,
+                            1.5
+                        ]
+                    ]
+                },
+                "line-dasharray": [
+                    2,
+                    2
+                ]
+            },
+            "interactive": true
+        },
+        {
+            "id": "minor road",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "0f0c5671b00a0cb79d64b8a147b54bf8"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "filter": [
+                "all",
+                [
+                    "all",
+                    [
+                        "!=",
+                        "type",
+                        "crossing"
+                    ],
+                    [
+                        "in",
+                        "class",
+                        "construction",
+                        "golf",
+                        "path",
+                        "pedestrian",
+                        "service",
+                        "street_limited",
+                        "track"
+                    ]
+                ],
+                [
+                    "in",
+                    "$type",
+                    "LineString",
+                    "Point"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "hsl(0, 1%, 46%)",
+                "line-width": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            10,
+                            0.5
+                        ],
+                        [
+                            16,
+                            1
+                        ]
+                    ]
+                }
+            },
+            "interactive": true
+        },
+        {
+            "id": "road",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "0f0c5671b00a0cb79d64b8a147b54bf8"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "filter": [
+                "all",
+                [
+                    "!in",
+                    "class",
+                    "construction",
+                    "ferry",
+                    "level_crossing",
+                    "major_rail",
+                    "minor_rail",
+                    "path",
+                    "track"
+                ],
+                [
+                    "in",
+                    "$type",
+                    "LineString",
+                    "Point"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "hsl(0, 1%, 46%)",
+                "line-width": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            10,
+                            0.5
+                        ],
+                        [
+                            16,
+                            2
+                        ]
+                    ]
+                }
+            },
+            "interactive": true
+        },
+        {
+            "id": "ferry",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "0f0c5671b00a0cb79d64b8a147b54bf8"
+            },
+            "source": "composite",
+            "source-layer": "road",
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "class",
+                    "ferry"
+                ],
+                [
+                    "in",
+                    "$type",
+                    "LineString",
+                    "Point"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "hsl(213, 100%, 50%)",
+                "line-width": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            10,
+                            0.5
+                        ],
+                        [
+                            16,
+                            1.5
+                        ]
+                    ]
+                },
+                "line-dasharray": [
+                    2,
+                    2.6
+                ]
+            },
+            "interactive": true
+        },
+        {
+            "id": "admin",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "0f0c5671b00a0cb79d64b8a147b54bf8"
+            },
+            "source": "composite",
+            "source-layer": "admin",
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "disputed",
+                    0
+                ],
+                [
+                    "in",
+                    "$type",
+                    "LineString",
+                    "Point"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {},
+            "interactive": true
+        },
+        {
+            "id": "aeroway",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "0f0c5671b00a0cb79d64b8a147b54bf8"
+            },
+            "source": "composite",
+            "source-layer": "aeroway",
+            "filter": [
+                "in",
+                "$type",
+                "LineString",
+                "Point"
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "hsl(312, 100%, 63%)"
+            },
+            "interactive": true
+        },
+        {
+            "id": "waterway",
+            "type": "line",
+            "metadata": {
+                "mapbox:group": "0f0c5671b00a0cb79d64b8a147b54bf8"
+            },
+            "source": "composite",
+            "source-layer": "waterway",
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "hsl(213, 100%, 50%)",
+                "line-width": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            10,
+                            0.5
+                        ],
+                        [
+                            16,
+                            1.5
+                        ]
+                    ]
+                },
+                "line-dasharray": [
+                    2,
+                    2.6
+                ]
+            },
+            "interactive": true
+        },
+        {
+            "id": "building",
+            "type": "fill-extrusion",
+            "metadata": {
+                "mapbox:group": "291cf04c4d42c8fbe82804c4e260b481"
+            },
+            "source": "composite",
+            "source-layer": "building",
+            "filter": [
+                "==",
+                "extrude",
+                "true"
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "fill-extrusion-height": {
+                    "base": 1,
+                    "type": "exponential",
+                    "property": "height",
+                    "stops": [
+                        [
+                            0,
+                            0
+                        ],
+                        [
+                            10000,
+                            10000
+                        ]
+                    ]
+                },
+                "fill-extrusion-opacity": 0.6
+            },
+            "interactive": true
+        },
+        {
+            "id": "house numbers",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "291cf04c4d42c8fbe82804c4e260b481"
+            },
+            "source": "composite",
+            "source-layer": "housenum_label",
+            "layout": {
+                "text-size": 12,
+                "text-transform": "uppercase",
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "text-padding": 0,
+                "text-offset": [
+                    0,
+                    -0.25
+                ],
+                "text-anchor": "bottom",
+                "text-field": "{house_num}",
+                "icon-padding": 0
+            },
+            "paint": {
+                "text-color": "hsl(0, 1%, 46%)"
+            },
+            "interactive": true
+        },
+        {
+            "id": "admin labels",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "7585fc5330da0ebd023654f80536026a"
+            },
+            "source": "composite",
+            "source-layer": "admin",
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "disputed",
+                    0
+                ],
+                [
+                    "in",
+                    "$type",
+                    "LineString",
+                    "Point"
+                ]
+            ],
+            "layout": {
+                "text-field": "{iso_3166_1}",
+                "symbol-placement": "line",
+                "text-rotation-alignment": "map",
+                "text-anchor": "bottom",
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "text-size": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            9,
+                            12
+                        ],
+                        [
+                            14,
+                            19
+                        ]
+                    ]
+                }
+            },
+            "paint": {},
+            "interactive": true
+        },
+        {
+            "id": "waterway labels",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "7585fc5330da0ebd023654f80536026a"
+            },
+            "source": "composite",
+            "source-layer": "waterway_label",
+            "layout": {
+                "text-field": "{name_en}",
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "text-size": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            12,
+                            8
+                        ],
+                        [
+                            16,
+                            14
+                        ]
+                    ]
+                },
+                "symbol-placement": "line",
+                "text-anchor": "bottom"
+            },
+            "paint": {
+                "text-color": "hsl(213, 100%, 50%)",
+                "text-halo-width": 1,
+                "text-halo-color": "#2b2b2b"
+            },
+            "interactive": true
+        },
+        {
+            "id": "point of interest labels",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "7585fc5330da0ebd023654f80536026a"
+            },
+            "source": "composite",
+            "source-layer": "poi_label",
+            "filter": [
+                "all",
+                [
+                    "<",
+                    "localrank",
+                    30
+                ],
+                [
+                    "has",
+                    "name"
+                ]
+            ],
+            "layout": {
+                "text-size": 12,
+                "icon-image": "poi-dot",
+                "text-transform": "uppercase",
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "text-padding": 0,
+                "text-offset": [
+                    0,
+                    -0.25
+                ],
+                "text-anchor": "bottom",
+                "text-field": "{name_en}",
+                "icon-padding": 0
+            },
+            "paint": {
+                "text-color": "white"
+            },
+            "interactive": true
+        },
+        {
+            "id": "road labels",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "7585fc5330da0ebd023654f80536026a"
+            },
+            "source": "composite",
+            "source-layer": "road_label",
+            "layout": {
+                "text-field": "{name_en}",
+                "symbol-placement": "line",
+                "text-rotation-alignment": "map",
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "text-size": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            12,
+                            8
+                        ],
+                        [
+                            16,
+                            14
+                        ]
+                    ]
+                },
+                "text-anchor": "bottom"
+            },
+            "paint": {
+                "text-halo-color": "#2b2b2b",
+                "text-color": {
+                    "base": 1,
+                    "type": "categorical",
+                    "property": "class",
+                    "stops": [
+                        [
+                            "ferry",
+                            "#0073ff"
+                        ]
+                    ],
+                    "default": "hsl(0, 1%, 46%)"
+                },
+                "text-halo-width": 1
+            },
+            "interactive": true
+        },
+        {
+            "id": "place labels",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "7585fc5330da0ebd023654f80536026a"
+            },
+            "source": "composite",
+            "source-layer": "place_label",
+            "filter": [
+                "all",
+                [
+                    "!in",
+                    "type",
+                    "city",
+                    "town",
+                    "village"
+                ],
+                [
+                    "<",
+                    "localrank",
+                    20
+                ]
+            ],
+            "layout": {
+                "text-size": 12,
+                "text-transform": "uppercase",
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "visibility": "visible",
+                "text-offset": [
+                    0,
+                    -0.25
+                ],
+                "text-anchor": "bottom",
+                "text-field": "{name_en}",
+                "text-letter-spacing": 0.1,
+                "text-max-width": 6
+            },
+            "paint": {
+                "text-halo-width": 2,
+                "text-halo-color": "#2b2b2b",
+                "text-color": "white",
+                "text-translate-anchor": "viewport"
+            },
+            "interactive": true
+        },
+        {
+            "id": "airport labels",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "7585fc5330da0ebd023654f80536026a"
+            },
+            "source": "composite",
+            "source-layer": "airport_label",
+            "layout": {
+                "text-size": 12,
+                "icon-image": "poi-dot",
+                "text-transform": "uppercase",
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "visibility": "visible",
+                "text-offset": [
+                    0,
+                    -0.25
+                ],
+                "text-anchor": "bottom",
+                "text-field": "{name_en}",
+                "text-letter-spacing": 0.1,
+                "text-max-width": 6
+            },
+            "paint": {
+                "text-halo-width": 2,
+                "text-halo-color": "#2b2b2b",
+                "text-color": "white",
+                "text-translate-anchor": "viewport"
+            },
+            "interactive": true
+        },
+        {
+            "id": "water labels",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "7585fc5330da0ebd023654f80536026a"
+            },
+            "source": "composite",
+            "source-layer": "water_label",
+            "layout": {
+                "text-size": 12,
+                "text-transform": "uppercase",
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "visibility": "visible",
+                "text-offset": [
+                    0,
+                    -0.25
+                ],
+                "text-anchor": "bottom",
+                "text-field": "{name_en}",
+                "text-letter-spacing": 0.1,
+                "text-max-width": 6
+            },
+            "paint": {
+                "text-halo-width": 2,
+                "text-halo-color": "#2b2b2b",
+                "text-color": "hsl(213, 100%, 50%)",
+                "text-translate-anchor": "viewport"
+            },
+            "interactive": true
+        },
+        {
+            "id": "state labels",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "7585fc5330da0ebd023654f80536026a"
+            },
+            "source": "composite",
+            "source-layer": "state_label",
+            "layout": {
+                "visibility": "visible",
+                "text-field": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            4,
+                            "{abbr}"
+                        ],
+                        [
+                            5,
+                            "{name_en}"
+                        ]
+                    ]
+                },
+                "text-size": 12,
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "text-transform": "uppercase"
+            },
+            "paint": {
+                "text-color": "hsl(0, 1%, 46%)",
+                "text-halo-width": 2,
+                "text-halo-color": "#292929"
+            },
+            "interactive": true
+        },
+        {
+            "id": "city labels",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "7585fc5330da0ebd023654f80536026a"
+            },
+            "source": "composite",
+            "source-layer": "place_label",
+            "maxzoom": 14,
+            "filter": [
+                "all",
+                [
+                    "<",
+                    "localrank",
+                    10
+                ],
+                [
+                    "in",
+                    "type",
+                    "city",
+                    "town",
+                    "village"
+                ]
+            ],
+            "layout": {
+                "text-size": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            9,
+                            12
+                        ],
+                        [
+                            14,
+                            19
+                        ]
+                    ]
+                },
+                "icon-image": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            10,
+                            "poi-dot"
+                        ],
+                        [
+                            11,
+                            ""
+                        ]
+                    ]
+                },
+                "text-transform": "uppercase",
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "visibility": "visible",
+                "text-offset": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            10,
+                            [
+                                0,
+                                -0.25
+                            ]
+                        ],
+                        [
+                            11,
+                            [
+                                0,
+                                0
+                            ]
+                        ]
+                    ]
+                },
+                "text-anchor": {
+                    "base": 1,
+                    "stops": [
+                        [
+                            10,
+                            "bottom"
+                        ],
+                        [
+                            11,
+                            "center"
+                        ]
+                    ]
+                },
+                "text-field": "{name_en}",
+                "text-letter-spacing": 0.1,
+                "text-max-width": 6
+            },
+            "paint": {
+                "text-color": "white",
+                "text-translate-anchor": "viewport",
+                "text-halo-color": "#2b2b2b",
+                "text-halo-width": 2
+            },
+            "interactive": true
+        },
+        {
+            "id": "country labels",
+            "type": "symbol",
+            "metadata": {
+                "mapbox:group": "7585fc5330da0ebd023654f80536026a"
+            },
+            "source": "composite",
+            "source-layer": "country_label",
+            "layout": {
+                "text-size": 12,
+                "text-font": [
+                    "Magda Clean Mono Offc Pro Regular",
+                    "Arial Unicode MS Regular"
+                ],
+                "visibility": "visible",
+                "text-offset": [
+                    0,
+                    -0.25
+                ],
+                "text-anchor": "bottom",
+                "text-field": "{name_en}",
+                "text-letter-spacing": 0.1,
+                "text-max-width": 6
+            },
+            "paint": {
+                "text-halo-width": 2,
+                "text-halo-color": "#2b2b2b",
+                "text-color": "white",
+                "text-translate-anchor": "viewport"
+            },
+            "interactive": true
+        }
+    ],
+    "created": "2018-07-02T19:34:58.400Z",
+    "id": "cjj4nypu128ag2slgg99psk1p",
+    "modified": "2018-07-02T19:34:58.400Z",
+    "owner": "dtang29",
+    "visibility": "private",
+    "draft": false
+}
