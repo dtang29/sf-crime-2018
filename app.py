@@ -145,13 +145,6 @@ def crimedata2018theft():
                                         'DayOfWeek', 'Date', 'Time', 'PdDistrict',
                                         'Resolution', 'Address', 'X', 'Y'])
 
-
-    # useful_columns  = ['IncidntNum','Category','Descript',
-    #                                 'DayOfWeek', 'Date', 'Time', 'PdDistrict',
-    #                                 'Resolution', 'Address', 'X', 'Y']
-
-    # geojson_dict = df_to_geojson(df, properties=useful_columns)
-
     #Return the dataframe in json format
     return jsonify(df.to_dict(orient="records"))    
     
@@ -181,13 +174,6 @@ def crimedata2018assault():
                                         'DayOfWeek', 'Date', 'Time', 'PdDistrict',
                                         'Resolution', 'Address', 'X', 'Y'])
 
-
-    # useful_columns  = ['IncidntNum','Category','Descript',
-    #                                 'DayOfWeek', 'Date', 'Time', 'PdDistrict',
-    #                                 'Resolution', 'Address', 'X', 'Y']
-
-    # geojson_dict = df_to_geojson(df, properties=useful_columns)
-
     #Return the dataframe in json format
     return jsonify(df.to_dict(orient="records"))    
 
@@ -216,20 +202,8 @@ def crimedata2018vandalism():
                                         'DayOfWeek', 'Date', 'Time', 'PdDistrict',
                                         'Resolution', 'Address', 'X', 'Y'])
 
-
-    # useful_columns  = ['IncidntNum','Category','Descript',
-    #                                 'DayOfWeek', 'Date', 'Time', 'PdDistrict',
-    #                                 'Resolution', 'Address', 'X', 'Y']
-
-    # geojson_dict = df_to_geojson(df, properties=useful_columns)
-
     #Return the dataframe in json format
     return jsonify(df.to_dict(orient="records"))    
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-#1. Read in CSV into python
-#2. Create a sqllite database out of it
-#3. Import this database into python and create an engine with automap
-#4. Configure the endpoint to return a json
