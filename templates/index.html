@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
 
+
   <!-- d3 JavaScript -->
   <script src="https://d3js.org/d3.v4.min.js"></script>
 
@@ -27,10 +28,169 @@
   <script type="text/javascript" src="https://unpkg.com/leaflet.markercluster@1.0.3/dist/leaflet.markercluster.js"></script>
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.0.3/dist/MarkerCluster.css">
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.0.3/dist/MarkerCluster.Default.css">
+
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=
+  AIzaSyCGyG8mIuGTt3cwWw60FP_HlGcRgY-21u8
+  &libraries=places
+  &callback=initAutocomplete"></script>
+  
+  <title>Places Searchbox</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #description {
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+      }
+
+      #infowindow-content .title {
+        font-weight: bold;
+      }
+
+      #infowindow-content {
+        display: none;
+      }
+
+      #map #infowindow-content {
+        display: inline;
+      }
+
+      .pac-card {
+        margin: 10px 10px 0 0;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        font-family: Roboto;
+      }
+
+      #pac-container {
+        padding-bottom: 12px;
+        margin-right: 12px;
+      }
+
+      .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+      }
+
+      .pac-controls label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      #title {
+        color: #fff;
+        background-color: #4d90fe;
+        font-size: 25px;
+        font-weight: 500;
+        padding: 6px 12px;
+      }
+      #target {
+        width: 345px;
+      }
+    </style>
+
+    <script type="text/javascript">
+    function initAutocomplete() {
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 37.77397, lng: -122.43129},
+        zoom: 8,
+        mapTypeId: 'roadmap'
+    });
+
+    // Create the search box and link it to the UI element.
+    var input = document.getElementById('pac-input');
+    var searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener('bounds_changed', function() {
+        searchBox.setBounds(map.getBounds());
+    });
+
+    var markers = [];
+    // Listen for the event fired when the user selects a prediction and retrieve
+    // more details for that place.
+    searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+        return;
+        }
+
+        // Clear out the old markers.
+        markers.forEach(function(marker) {
+        marker.setMap(null);
+        });
+        markers = [];
+
+        // For each place, get the icon, name and location.
+        var bounds = new google.maps.LatLngBounds();
+        places.forEach(function(place) {
+        if (!place.geometry) {
+            console.log("Returned place contains no geometry");
+            return;
+        }
+        var icon = {
+            url: place.icon,
+            size: new google.maps.Size(71, 71),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+            scaledSize: new google.maps.Size(25, 25)
+        };
+
+        // Create a marker for each place.
+        markers.push(new google.maps.Marker({
+            map: map,
+            icon: icon,
+            title: place.name,
+            position: place.geometry.location
+        }));
+
+        if (place.geometry.viewport) {
+    // Only geocodes have viewport.
+    bounds.union(place.geometry.viewport);
+    } else {
+    bounds.extend(place.geometry.location);
+    }
+    });
+    map.fitBounds(bounds);
+    });
+    }
+    </script>
 </head>
 
 <body>
-    
+
     <div class="panel panel-default">
         <div class="panel-heading">
           <font face="courier" color="red">
@@ -39,19 +199,21 @@
         </div>
     </div>
 
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
     <div id="map"></div>
-   
-      <script>
-    
-        var mapbox_url = "/api/mapbox/dark"
-        // Add base layer
-        var base = L.tileLayer("https://api.mapbox.com/styles/v1/dtang29/cjj4nypu128ag2slgg99psk1p/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZHRhbmcyOSIsImEiOiJjaml4d3VjdDAwNGc1M3ZwY2c5N2l6NzNxIn0.bmCkx-wQYo-__4VKq3P5qA");
+        </script>
+        
+        <script>
+
+        var base = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaHAtbnVuZXMiLCJhIjoiY2pqNHAxaHIxMDA3aTNrbW15OGx2NW4ybiJ9.pHzT2FAtpO-Xhnc3PzJsFA");
     
         // Set variables for our endpoints to grab the data
         var url = "/api/crimedata/sfgrid";
         var assault_url = "/api/crimedata/2018/assault";
         var vandalism_url = "/api/crimedata/2018/vandalism";
         var theft_url = "/api/crimedata/2018/theft";
+        var linesBART_url = "/api/crimedata/sfBARTlines";
+        var stationsBART_url = "/api/crimedata/sfBARTstations";
     
        
     ////////////////////////////////////
@@ -155,12 +317,12 @@
                     L.geoJson(assault_data, {
                         // Style each feature (in this case a neighborhood)
                         style: function(feature) {
+                            console.log(feature)
                             return {
-                                color: "#0079FF",
-                                // Call the chooseColor function to decide which color to color our neighborhood (color based on borough)
-                                // fillColor: chooseColor(feature.properties.borough),
+                                // strokeWidth: 1,
+                                fillColor: 'grey',
                                 fillOpacity: 0.5,
-                                weight: 1.5
+                                color: "255,255,255, 0.5"
                             };
                         },
                             // Called on each feature
@@ -172,7 +334,8 @@
                                 layer = event.target;
                                 console.log(layer);
                                 layer.setStyle({
-                                    fillOpacity: 0.9
+                                    fillOpacity: 0.5,
+                                color: "255,255,255, 0.5"
                                 });
                                 },
                                 // When the cursor no longer hovers over a map feature - when the mouseout event occurs - the feature's opacity reverts back to 50%
@@ -180,7 +343,8 @@
                                 layer = event.target;
                                 console.log(layer);
                                 layer.setStyle({
-                                    fillOpacity: 0.5
+                                    fillOpacity: 0.5,
+                                color: "255,255,255, 0.5"
                                 });
                                 },
                                 // When a feature (neighborhood) is clicked, it is enlarged to fit the screen
@@ -195,14 +359,41 @@
                     }).addTo(map);
     
     
+                    // Add BART features to map
+                    d3.json(linesBART_url, function(response) {
+                            L.geoJson(response, {
+                                style: function(feature) {
+                                    return {
+                                               color: 'red',
+                                                fillOpacity: 1,
+                                                weight: 1.5
+                                                }
+                                                        }
+                    }).addTo(map);
+
+
+                    d3.json(stationsBART_url, function(response) {
+                            L.geoJson(response, {
+                                style: function(feature) {
+                                    return {
+                                               color: 'red',
+                                                fillOpacity: 1,
+                                                weight: 1.5,
+                                                size: 5
+                                                }
+                                                        }
+                    }).addTo(map);
+                    
                     //Add the layers to the map
                     L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+                                });
+                            });
+                        });
+                    });
                 });
             });
-        });
-    });
         </script>
-
 </body>
 
-</html> 
+</html>
