@@ -275,12 +275,10 @@
                                                         }
                     }).addTo(map);
 
-                        .attr("height", 20).attr("width", 20)
-                        .attr("x", -10).attr("y", -10)
-                    }
                     d3.json(stationsBART_url, function(response) {
                             L.geoJson(response, {
                                 style: function(feature) {
+                                    return {
                                                color: 'red',
                                                 fillOpacity: 1,
                                                 weight: 1.5,
