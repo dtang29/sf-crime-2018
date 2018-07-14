@@ -29,6 +29,7 @@
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.0.3/dist/MarkerCluster.css">
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet.markercluster@1.0.3/dist/MarkerCluster.Default.css">
 
+<<<<<<< HEAD
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=
   AIzaSyCGyG8mIuGTt3cwWw60FP_HlGcRgY-21u8
   &libraries=places
@@ -187,6 +188,12 @@
     });
     }
     </script>
+=======
+  <!-- Google Places API -->
+  <script src="https://maps.googleapis.com/maps/api/js?v=3&libraries=places&sensor=false"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/place/nearbysearch/json&key=AIzaSyCXa_2ZFy88_imw8zXpItAunCGoyEyWcLE"></script>
+
+>>>>>>> hadrien
 </head>
 
 <body>
@@ -194,17 +201,32 @@
     <div class="panel panel-default">
         <div class="panel-heading">
           <font face="courier" color="red">
-          <center><h3 class="panel-title">Where does crime happen in SF?</h3></center>
+          <center><h3 class="panel-title" font="roboto">Where does crime happen in SF?</h3></center>
           </font>
         </div>
     </div>
 
     <input id="pac-input" class="controls" type="text" placeholder="Search Box">
     <div id="map"></div>
+<<<<<<< HEAD
         </script>
         
         <script>
 
+=======
+
+    <div id="post-it">
+            <b>Search values:</b>
+            <br /> Google Places search box
+            <br />
+            <small><a href="https://developers.google.com/maps/documentation/javascript/examples/places-searchbox">places-searchbox</a></small>
+          </div>
+   
+<script>
+ 
+        // var mapbox_url = "/api/mapbox/dark"
+        // Add base layer
+>>>>>>> hadrien
         var base = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaHAtbnVuZXMiLCJhIjoiY2pqNHAxaHIxMDA3aTNrbW15OGx2NW4ybiJ9.pHzT2FAtpO-Xhnc3PzJsFA");
     
         // Set variables for our endpoints to grab the data
@@ -309,20 +331,68 @@
                 zoom: 11,
                 layers: [base, assaultLayer, vandalismLayer,theftLayer]
                 });
+
+        ///////////////////////
+        //Create searchbox
+        ///////////////////////
+
+    var GoogleSearch = L.Control.extend({
+      onAdd: function() {
+        var element = document.createElement("input");
+
+        element.id = "searchBox";
+
+        return element;
+      }
+    });
+
+    (new GoogleSearch).addTo(map);
+    var input = document.getElementById("searchBox");
+
+    var searchBox = new google.maps.places.SearchBox(input);
+
+    searchBox.addListener('places_changed', function() {
+    var places = searchBox.getPlaces();
+
+    if (places.length == 0) {
+        return;
+    }
+
+    var group = L.featureGroup();
+
+    places.forEach(function(place) {
+
+        // Create a marker for each place.
+        console.log(places);
+        console.log(place.geometry.location.lat() + " / " + place.geometry.location.lng());
+        var marker = L.marker([
+        place.geometry.location.lat(),
+        place.geometry.location.lng()
+        ]);
+        group.addLayer(marker);
+    });
+
+    group.addTo(map);
+    map.fitBounds(group.getBounds());
+
+    });
+
+        
                 
-                ///////////////////////
-                //Create SF Grid
-                ///////////////////////
+    ///////////////////////
+    //Create SF Grid
+    //////////////////////
                 d3.json(url, function(assault_data) {
                     L.geoJson(assault_data, {
                         // Style each feature (in this case a neighborhood)
                         style: function(feature) {
                             console.log(feature)
                             return {
-                                // strokeWidth: 1,
                                 fillColor: 'grey',
-                                fillOpacity: 0.5,
-                                color: "255,255,255, 0.5"
+                                fillOpacity: 0.2,
+                                color: 'rgba(255,255,255,0.4)',
+                                lineWidth: 0.1
+
                             };
                         },
                             // Called on each feature
@@ -354,13 +424,15 @@
                                 }
                             });
                             // Giving each feature a pop-up with information pertinent to it
+                            //layer.setStyle({'color': 'white'})
                             layer.bindPopup("<h1>" + feature.properties.name + "</h1>");
                         }
                     }).addTo(map);
     
-    
-                    // Add BART features to map
-                    d3.json(linesBART_url, function(response) {
+    ///////////////////////
+    // Add BART features to map
+    //////////////////////
+                d3.json(linesBART_url, function(response) {
                             L.geoJson(response, {
                                 style: function(feature) {
                                     return {
@@ -371,11 +443,12 @@
                                                         }
                     }).addTo(map);
 
-
+                        .attr("height", 20).attr("width", 20)
+                        .attr("x", -10).attr("y", -10)
+                    }
                     d3.json(stationsBART_url, function(response) {
                             L.geoJson(response, {
                                 style: function(feature) {
-                                    return {
                                                color: 'red',
                                                 fillOpacity: 1,
                                                 weight: 1.5,
@@ -386,14 +459,15 @@
                     
                     //Add the layers to the map
                     L.control.layers(baseMaps, overlayMaps).addTo(map);
-
-                                });
-                            });
                         });
                     });
                 });
             });
-        </script>
+        });
+    });
+
+</script>
+    
 </body>
 
 </html>

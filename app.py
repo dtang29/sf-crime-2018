@@ -122,18 +122,17 @@ def sfgrid():
 
 @app.route("/api/crimedata/sfBARTstations")
 def sfBARTstations():
-    json_data = os.path.join(app.static_folder, 'sfBARTstations.geojson')
+    json_data = os.path.join(app.static_folder, 'sfBARTStations.geojson')
     with open(json_data) as blog_file:
         data = json.load(blog_file)
         return jsonify(data)
 
 @app.route("/api/crimedata/sfBARTlines")
 def sfBARTlines():
-    json_data = os.path.join(app.static_folder, 'sfBARTlines.geojson')
+    json_data = os.path.join(app.static_folder, 'sfBARTLines.geojson')
     with open(json_data) as blog_file:
         data = json.load(blog_file)
         return jsonify(data)
-
 
 @app.route("/api/crimedata/2018/theft")
 def crimedata2018theft():
